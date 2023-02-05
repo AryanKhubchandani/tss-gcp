@@ -1,0 +1,131 @@
+body {
+  font-family: sans-serif;
+  background-color: #d7d7d7;
+}
+
+a {
+  cursor: pointer;
+}
+
+audio {
+  width: 300px;
+  height: auto;
+}
+
+.wrapper {
+  margin: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90vw;
+}
+
+.heading {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.subheading {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  border: 0.2rem solid black;
+  border-radius: 10px;
+  background-color: white;
+  margin: 4rem auto;
+  padding: 2rem;
+  width: 80%;
+  height: 60vh;
+}
+
+.doughnut {
+  border: 9px solid #f00;
+  border-radius: 50%;
+  height: 0.5rem;
+  width: 0.5rem;
+}
+
+.circle {
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 50%;
+  background-color: red;
+  height: 4rem;
+  width: 4rem;
+  font-size: 3rem !important;
+  display: block;
+}
+
+.material-icons {
+  padding-top: 0.5rem;
+  font-size: 3rem !important;
+  color: white;
+}
+
+.stop {
+  font-size: 1.5rem;
+  color: white;
+}
+
+#recordingStatus {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  height: 4.5rem;
+  width: 4.5rem;
+  border-radius: 50%;
+  /* visibility: hidden; */
+  -webkit-animation-name: redGlow;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes redGlow {
+  from {
+    background-color: #ff371d;
+    -webkit-box-shadow: 0 0 9px #ff1e00;
+  }
+  50% {
+    background-color: #ff1e00;
+    -webkit-box-shadow: 0 0 18px #bdb5b4;
+  }
+  to {
+    background-color: #ff371d;
+    -webkit-box-shadow: 0 0 9px #ff1e00;
+  }
+}
+
+#ResultText {
+  width: 60vw;
+  border: 0.1rem solid black;
+  border-radius: 10px;
+}
+
+#ResultText span {
+  display: inline-block;
+  margin: 1rem;
+}
+
+#TranslatedText {
+  width: 60vw;
+  border: 0.1rem solid black;
+  border-radius: 10px;
+}
+
+#TranslatedText span {
+  display: inline-block;
+  margin: 1rem;
+}

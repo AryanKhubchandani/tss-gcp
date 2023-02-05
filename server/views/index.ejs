@@ -1,0 +1,40 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <title>Speech to Text Translator</title>
+
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <div class="wrapper">
+       <div class="heading">SPEECH T<div class="doughnut"></div>&nbspTEXT TRANSLATOR</div>
+
+        <audio></audio>
+
+        <div class="container">
+        <div class="subheading">Start Recording</div>
+        <a id="startRecButton"><div class="circle" > <span class="material-icons">mic</span></div></a>
+        <a id="stopRecButton"><div id="recordingStatus"><span class="stop">Stop</span></div></a>
+
+
+        <div>
+            <p id="ResultText">
+                <span>No Speech to Text yet<span>
+            </p>
+            <p id="TranslatedText">
+                <span>No Translations yet
+                    <span>
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js"></script>
+
+
+    <script src="assets/js/client.js"></script>
+</body>
+
+</html>
