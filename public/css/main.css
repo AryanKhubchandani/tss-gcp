@@ -24,7 +24,7 @@ audio {
   text-align: center;
   display: flex;
   align-items: center;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: bold;
 }
 
@@ -40,11 +40,11 @@ audio {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
   border: 0.2rem solid black;
   border-radius: 10px;
   background-color: white;
-  margin: 4rem auto;
+  margin: 3rem auto;
   padding: 2rem;
   width: 80%;
   height: 60vh;
@@ -53,8 +53,8 @@ audio {
 .doughnut {
   border: 9px solid #f00;
   border-radius: 50%;
-  height: 0.5rem;
-  width: 0.5rem;
+  height: 0.8rem;
+  width: 0.8rem;
 }
 
 .circle {
@@ -109,23 +109,55 @@ audio {
 }
 
 #ResultText {
+  cursor: not-allowed;
   width: 60vw;
   border: 0.1rem solid black;
   border-radius: 10px;
 }
 
 #ResultText span {
-  display: inline-block;
-  margin: 1rem;
+  display: block;
+  margin: 1.5rem;
 }
 
 #TranslatedText {
+  cursor: not-allowed;
   width: 60vw;
   border: 0.1rem solid black;
   border-radius: 10px;
 }
 
 #TranslatedText span {
-  display: inline-block;
-  margin: 1rem;
+  display: block;
+  margin: 1.5rem;
+}
+
+.score-container {
+  display: flex;
+}
+
+#score-button {
+  padding: 0.5rem;
+  border-radius: 10%;
+  background-color: black;
+  color: white;
+  margin: 1.5rem;
+  cursor: pointer;
+}
+
+#score-button:disabled {
+  background-color: black;
+  color: white;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#score-output {
+  font-weight: bold;
+  width: 4vw;
+  text-align: center;
+  color: rgb(35, 237, 78);
+  background-color: #333;
+  border-radius: 10px;
+  padding: 1rem;
 }

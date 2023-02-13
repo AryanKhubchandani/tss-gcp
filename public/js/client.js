@@ -5,7 +5,10 @@ let bufferSize = 2048,
   context,
   processor,
   input,
-  globalStream;
+  globalStream,
+  blob,
+  data,
+  url;
 
 let resultText = document.getElementById("ResultText"),
   translatedText = document.getElementById("TranslatedText"),
@@ -39,6 +42,36 @@ async function initRecording() {
     const audioData = e.data;
     microphoneProcess(audioData);
   };
+
+  const handleSuccess = function (stream) {
+    const options = { mimeType: "audio/webm" };
+    const recordedChunks = [];
+    const mediaRecorder = new MediaRecorder(stream, options);
+
+    mediaRecorder.addEventListener("dataavailable", function (e) {
+      if (e.data.size > 0) recordedChunks.push(e.data);
+    });
+
+    mediaRecorder.addEventListener("stop", function () {
+      blob = new Blob(recordedChunks, { type: "audio/wav" });
+      console.log(blob);
+      socket.emit("saveData", blob);
+    });
+
+    stopButton.addEventListener("click", function () {
+      try {
+        mediaRecorder.stop();
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    mediaRecorder.start();
+  };
+
+  navigator.mediaDevices
+    .getUserMedia({ audio: true, video: false })
+    .then(handleSuccess);
 }
 
 function microphoneProcess(buffer) {
@@ -51,6 +84,9 @@ startButton.addEventListener("click", startRecording);
 var stopButton = document.getElementById("stopRecButton");
 stopButton.addEventListener("click", stopRecording);
 
+var scoreButton = document.getElementById("score-button");
+scoreButton.addEventListener("click", returnScore);
+
 var recordingStatus = document.getElementById("recordingStatus");
 
 function startRecording() {
@@ -58,6 +94,8 @@ function startRecording() {
   stopButton.style.display = "block";
   recordingStatus.style.display = "flex";
   initRecording();
+  resultText.lastElementChild.innerText = "Processing...";
+  translatedText.lastElementChild.innerText = "Processing...";
 }
 
 function stopRecording() {
@@ -66,8 +104,10 @@ function stopRecording() {
   recordingStatus.style.display = "none";
   streamStreaming = false;
   socket.emit("endGoogleCloudStream", "");
+  scoreButton.disabled = false;
 
   let track = globalStream.getTracks()[0];
+  // console.log(track);
   track.stop();
 
   input.disconnect(processor);
@@ -80,6 +120,17 @@ function stopRecording() {
     startButton.disabled = false;
   });
 }
+
+function returnScore() {
+  document.getElementById("score-output").innerHTML = "...";
+  if (streamStreaming) stopRecording();
+  // console.log(url);
+  socket.emit("returnScore", "");
+}
+
+socket.on("publishScore", function (data) {
+  document.getElementById("score-output").innerHTML = data;
+});
 
 socket.on("connect", function (data) {
   socket.emit("join", "Server Connected to Client");

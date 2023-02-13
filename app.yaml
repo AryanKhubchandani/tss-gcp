@@ -1,0 +1,12 @@
+runtime: nodejs18
+env: flex
+instance_class: F1
+automatic_scaling:
+  min_idle_instances: automatic
+  max_idle_instances: automatic
+  min_pending_latency: automatic
+  max_pending_latency: automatic
+
+env_variables:
+  GCLOUD_STORAGE_BUCKET: blob-stt
+  API_KEY: 20eaa2b963mshc1e7eb3089ec601p1e7a40jsna473d5f11664

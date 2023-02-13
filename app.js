@@ -3,6 +3,9 @@ require("dotenv").config();
 const express = require("express");
 const speech = require("@google-cloud/speech");
 const { Translate } = require("@google-cloud/translate").v2;
+const axios = require("axios");
+const { Storage } = require("@google-cloud/storage");
+const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 try {
@@ -16,6 +19,12 @@ try {
 const speechClient = new speech.SpeechClient();
 const translate = new Translate();
 var io = require("socket.io")(server);
+const storage = new Storage();
+const myBucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET);
+
+var post_id = "";
+var publicUrl = "";
+var options = {};
 
 app.use("/assets", express.static("public"));
 app.set("view engine", "ejs");
@@ -53,6 +62,29 @@ io.on("connection", function (client) {
       recognizeStream.write(data);
     }
   });
+  client.on("returnScore", function () {
+    returnScore(client);
+    console.log("returnScore");
+    console.log("PUBLIC", publicUrl);
+    // client.emit("publishScore", (98.9192).toFixed(2));
+  });
+  client.on("saveData", function (data) {
+    var uuid = uuidv4();
+    const file = myBucket.file(`${uuid}.wav`);
+    const stream = file
+      .createWriteStream({
+        metadata: {
+          contentType: "audio/wav",
+        },
+      })
+      .on("finish", () => {
+        // publicUrl = `https://storage.googleapis.com/${myBucket.name}/${uuid}.wav`;
+        publicUrl =
+          "https://storage.googleapis.com/thefluentme01.appspot.com/audio/test/example_user_recording.wav";
+      });
+    stream.write(data);
+    stream.end();
+  });
 
   function startRecognitionStream(client) {
     recognizeStream = speechClient
@@ -66,6 +98,20 @@ io.on("connection", function (client) {
           //     : "\n\nReached transcription time limit, press Ctrl+C\n"
           // );
           translateText(client);
+        options = {
+          method: "POST",
+          url: "https://thefluentme.p.rapidapi.com/post",
+          headers: {
+            "content-type": "application/json",
+            "X-RapidAPI-Key": process.env.API_KEY,
+            "X-RapidAPI-Host": "thefluentme.p.rapidapi.com",
+          },
+          data: {
+            post_language_id: "20",
+            post_title: "Test case",
+            post_content: `${text}`,
+          },
+        };
         client.emit("speechData", data);
 
         if (data.results[0] && data.results[0].isFinal) {
@@ -108,4 +154,42 @@ async function translateText(client) {
   translations.forEach((translation, i) => {
     console.log(`${text} => (${target}) ${translation}`);
   });
+}
+
+function returnScore(client) {
+  axios
+    .request(options)
+    .then(function (response) {
+      console.log("TEXT", text);
+      post_id = response.data.post_id;
+      console.log(response.data.post_id);
+      const score = {
+        method: "POST",
+        url: `https://thefluentme.p.rapidapi.com/score/${post_id}`,
+        headers: {
+          "content-type": "application/json",
+          "X-RapidAPI-Key": process.env.API_KEY,
+          "X-RapidAPI-Host": "thefluentme.p.rapidapi.com",
+        },
+        data: { audio_provided: `${publicUrl}` },
+      };
+      axios
+        .request(score)
+        .then(function (response) {
+          pub =
+            response.data[1].overall_result_data[0].overall_points.toFixed(2);
+          console.log(
+            "POINTS",
+            response.data[1].overall_result_data[0].overall_points
+          );
+          client.emit("publishScore", pub);
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    })
+    .catch(function (error) {
+      console.log("TEXT", text);
+      console.error(error);
+    });
 }

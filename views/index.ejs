@@ -19,7 +19,6 @@
         <a id="startRecButton"><div class="circle" > <span class="material-icons">mic</span></div></a>
         <a id="stopRecButton"><div id="recordingStatus"><span class="stop">Stop</span></div></a>
 
-
         <div>
             <p id="ResultText">
                 <span>No Speech to Text yet<span>
@@ -29,6 +28,14 @@
                     <span>
             </p>
         </div>
+        <div class="score-container">
+            <button id="score-button" disabled>Get Score</button>
+            <p id="score-output">
+                00.00
+            </p>
+        </div>
+
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js"></script>
